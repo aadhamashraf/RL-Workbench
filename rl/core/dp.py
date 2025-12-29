@@ -1,49 +1,39 @@
 from typing import Dict, Tuple
 import random
 
-def bellman_equation(P: Dict, R: Dict, V: Dict, gamma: float, 
-                     state: int, mode: str = "VI", 
-                     policy: Dict = None, action: int = None) -> float:
+def bellman_equation( P: Dict, R: Dict, V: Dict,gamma: float,state: int, mode: str = "VI", policy: Dict = None, action: int = None) -> float:
+    
+  if state not in P or not P[state]:
+        return 0.0
+    
+    result = 0.0
+    best_value = float("-inf")
+
+    for a in P[state]:
+
+        if mode == "Q" and a != action:
+            continue
+        if mode == "PI" and (policy is None or a not in policy.get(state, {})):
+            continue
+
+        q_sa = sum(
+            prob * (R[state][a][s_next] + gamma * V[s_next])
+            for s_next, prob in P[state][a].items()
+        )
+
+        if mode == "VI":
+            best_value = max(best_value, q_sa)
+
+        elif mode == "PI":
+            result += policy[state][a] * q_sa
+
+        elif mode == "Q":
+            return q_sa
 
     if mode == "VI":
+        return best_value if best_value != float("-inf") else 0.0
 
-        if not P[state]:
-            return 0
-
-        action_values = []
-
-        for action in P[state]:
-            expected_value = sum( prob * (R[state][action][next_state] + gamma * V[next_state]) for next_state, prob in P[state][action].items() )
-            action_values.append(expected_value)
-
-        return max(action_values) if action_values else 0
-    
-    elif mode == "PI":
-
-        if not P[state] or state not in policy:
-            return 0
-
-        value = 0
-
-        for action, action_prob in policy[state].items():
-            expected_value = sum( prob * (R[state][action][next_state] + gamma * V[next_state]) for next_state, prob in P[state][action].items() )
-            value += action_prob * expected_value
-
-        return value
-    
-    elif mode == "Q":
-
-        if action is None:
-            raise ValueError("action parameter required for Q mode")
-
-        if not P[state] or action not in P[state]:
-            return 0
-
-        return sum(prob * (R[state][action][next_state] + gamma * V[next_state]) for next_state, prob in P[state][action].items()  )
-    
-    else:
-
-        raise ValueError(f"Unknown mode: {mode}")
+    return result
 
 def value_iteration(P: Dict, R: Dict, gamma: float, theta: float) -> Tuple[Dict, Dict]:
 
