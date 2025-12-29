@@ -1,11 +1,11 @@
 from typing import Dict, Tuple
 import random
 
-def bellman_equation( P: Dict, R: Dict, V: Dict,gamma: float,state: int, mode: str = "VI", policy: Dict = None, action: int = None) -> float:
-    
-  if state not in P or not P[state]:
+def bellman_equation(P: Dict, R: Dict, V: Dict, gamma: float, state: int, mode: str = "VI", policy: Dict = None, action: int = None) -> float:
+
+    if state not in P or not P[state]:
         return 0.0
-    
+
     result = 0.0
     best_value = float("-inf")
 
@@ -17,7 +17,7 @@ def bellman_equation( P: Dict, R: Dict, V: Dict,gamma: float,state: int, mode: s
             continue
 
         q_sa = sum(
-            prob * (R[state][a][s_next] + gamma * V[s_next])
+            prob * (R[state][a].get(s_next, 0.0) + gamma * V[s_next])
             for s_next, prob in P[state][a].items()
         )
 
@@ -108,7 +108,6 @@ def policy_iteration(P: Dict, R: Dict, gamma: float, theta: float) -> Tuple[Dict
                     best_value = q_value
                     best_action = action
             
-
             old_value = bellman_equation(P, R, V, gamma, state, mode="Q", action=old_action)
             max_delta = max(max_delta, abs(best_value - old_value))
             
