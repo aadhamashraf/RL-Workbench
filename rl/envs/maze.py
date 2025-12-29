@@ -1,6 +1,7 @@
 """Maze Solver Environment"""
 import numpy as np
 from rl.envs.base import BaseEnvironment
+from collections import deque
 
 
 class MazeEnv(BaseEnvironment):
@@ -25,7 +26,6 @@ class MazeEnv(BaseEnvironment):
         return maze
 
     def _has_path(self, maze):
-        from collections import deque
         q, visited = deque([(0, 0)]), set()
         while q:
             x, y = q.popleft()
