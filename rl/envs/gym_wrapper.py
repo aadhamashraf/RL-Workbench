@@ -1,6 +1,10 @@
 import gymnasium as gym
 import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_agg import FigureCanvasAgg
+from matplotlib.figure import Figure
 from rl.envs.base import BaseEnvironment
+
 
 class GymnasiumEnvWrapper(BaseEnvironment):
   """Wrapper for Gymnasium environments"""
@@ -54,10 +58,6 @@ class GymnasiumEnvWrapper(BaseEnvironment):
       frame = self.env.render()
       
       if frame is None or not isinstance(frame, np.ndarray):
-        import matplotlib.pyplot as plt
-        from matplotlib.backends.backend_agg import FigureCanvasAgg
-        from matplotlib.figure import Figure
-        
         fig = Figure(figsize=(6, 4), dpi=100)
         canvas = FigureCanvasAgg(fig)
         ax = fig.add_subplot(111)
@@ -82,10 +82,6 @@ class GymnasiumEnvWrapper(BaseEnvironment):
       return frame
       
     except Exception as e:
-      import matplotlib.pyplot as plt
-      from matplotlib.backends.backend_agg import FigureCanvasAgg
-      from matplotlib.figure import Figure
-      
       fig = Figure(figsize=(6, 4), dpi=100)
       canvas = FigureCanvasAgg(fig)
       ax = fig.add_subplot(111)
@@ -140,26 +136,6 @@ class GymnasiumEnvWrapper(BaseEnvironment):
         np.linspace(-1.2, 0.6, 20),
         np.linspace(-0.07, 0.07, 20)
       ]
-    elif self.env_name == 'Acrobot':
-      return [
-        np.linspace(-1, 1, 10),
-        np.linspace(-1, 1, 10),
-        np.linspace(-1, 1, 10),
-        np.linspace(-1, 1, 10),
-        np.linspace(-4, 4, 10),
-        np.linspace(-9, 9, 10)
-      ]
-    elif self.env_name == 'LunarLander':
-      return [
-        np.linspace(-1.0, 1.0, 5),
-        np.linspace(-1.0, 1.0, 5),
-        np.linspace(-1.0, 1.0, 5),
-        np.linspace(-1.0, 1.0, 5),
-        np.linspace(-1.0, 1.0, 5),
-        np.linspace(-1.0, 1.0, 5),
-        np.linspace(0.0, 1.0, 2),
-        np.linspace(0.0, 1.0, 2)
-      ]
     else:
       low = self.env.observation_space.low
       high = self.env.observation_space.high
@@ -167,7 +143,6 @@ class GymnasiumEnvWrapper(BaseEnvironment):
       bins = []
       for l, h in zip(low, high):
         if np.isinf(l) or np.isinf(h):
-           # Fallback for infinite bounds
            l = l if not np.isinf(l) else -10.0
            h = h if not np.isinf(h) else 10.0
         bins.append(np.linspace(l, h, 10))
