@@ -213,8 +213,9 @@ def generate_training_video(env, agent, hist, env_name, algo, n_samples=5, fps=5
 
 
 def save_video_mp4(filepath, frames, fps, size):
-    """Save frames as MP4 using imageio with ffmpeg"""
+    """Save frames as MP4 using imageio with ffmpeg, falling back to OpenCV"""
     
+    # Try imageio first (often best quality/compression)
     try:
         frames_u8 = []
         for frame in frames:
@@ -222,36 +223,55 @@ def save_video_mp4(filepath, frames, fps, size):
                 frame = (frame * 255).astype(np.uint8) if frame.max() <= 1.0 else frame.astype(np.uint8)
             frames_u8.append(frame)
         
+        # Explicitly request ffmpeg plugin
         imageio.mimsave(
             filepath, frames_u8, fps=fps,
+            plugin='ffmpeg',
             codec='libx264',
             pixelformat='yuv420p',
-            output_params=['-pix_fmt', 'yuv420p']
+            output_params=['-pix_fmt', 'yuv420p', '-crf', '23']
         )
-        print(f"  ✓ Encoded with H.264 codec (browser-compatible)")
+        print(f"  ✓ Encoded with imageio (H.264)")
         return True
         
     except Exception as e:
-        print(f"  Error with imageio: {e}")
+        print(f"  Imageio failed: {e}")
         print(f"  Trying OpenCV fallback...")
         
-        try:
-            fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-            out = cv2.VideoWriter(filepath, fourcc, fps, size)
-            
-            if not out.isOpened():
-                raise RuntimeError("VideoWriter failed to open")
-            
-            for frame in frames:
-                frame_bgr = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
-                out.write(frame_bgr)
-            
-            out.release()
-            print(f"  ✓ Encoded with OpenCV (may have limited browser support)")
-            return True
-            
-        except Exception as e2:
-            raise RuntimeError(f"Failed to encode: imageio: {e}, opencv: {e2}")
+        # Try OpenCV with multiple codec options
+        # avc1/H264 are browser friendly (H.264)
+        # mp4v is the fallback (MPEG-4 Part 2, widely supported by players but less so by browsers)
+        codecs_to_try = [
+            ('avc1', 'H.264'), 
+            ('H264', 'H.264'), 
+            ('mp4v', 'MPEG-4')
+        ]
+        
+        for fourcc_str, codec_name in codecs_to_try:
+            try:
+                fourcc = cv2.VideoWriter_fourcc(*fourcc_str)
+                out = cv2.VideoWriter(filepath, fourcc, fps, size)
+                
+                if not out.isOpened():
+                    continue
+                
+                for frame in frames:
+                    # OpenCV expects BGR
+                    frame_bgr = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+                    out.write(frame_bgr)
+                
+                out.release()
+                
+                # Verify file was created and has content
+                if os.path.exists(filepath) and os.path.getsize(filepath) > 1000:
+                    print(f"  ✓ Encoded with OpenCV using {codec_name} ({fourcc_str})")
+                    return True
+                
+            except Exception as cv_e:
+                print(f"  Failed with {fourcc_str}: {cv_e}")
+                continue
+                
+        raise RuntimeError("All video encoding methods failed")
 
 
 def resize_frame(frame, size, method=Image.BILINEAR):
