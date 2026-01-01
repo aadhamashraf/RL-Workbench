@@ -19,6 +19,12 @@
 
 The **RL Playground** is a comprehensive educational tool designed to help students, researchers, and enthusiasts understand reinforcement learning algorithms through interactive visualization. Train agents, compare algorithms, and watch them learn in real-time across 28+ diverse environments.
 
+## 🎥 Demo
+
+<p align="center">
+  <img src="interface/RL Bonus Visualizer.gif" width="800" alt="RL Playground Demo"/>
+</p>
+
 ###  Key Highlights
 
 -  **7 Classic RL Algorithms** - From Dynamic Programming to Temporal Difference methods
