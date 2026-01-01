@@ -1,4 +1,4 @@
-# 🎮 Reinforcement Learning Playground
+# Reinforcement Learning Playground
 
 <div align="center">
 
@@ -332,22 +332,6 @@ Minimal environments for understanding RL fundamentals.
 
 ---
 
-```
-
-Expected output:
-```
-Testing 28 environments...
-
-✓ GridWorld                     | States:      100 | Actions: 4
-✓ GridWorld-Small               | States:       25 | Actions: 4
-...
-✓ TicTacToe                     | States:     5478 | Actions: 9
-
-======================================================================
-Results: 28/28 environments created successfully
-
-All environments working perfectly!
-```
 
 ---
 
@@ -406,6 +390,7 @@ Bonus/
 │   └── inference_videos/      # Learned policy GIFs
 │
 ```
+---
 
 ### Key Components
 
@@ -621,7 +606,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Sutton & Barto** for the foundational RL textbook
 ---
 
----
 
 <div align="center">
 
