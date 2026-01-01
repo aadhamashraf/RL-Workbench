@@ -283,7 +283,7 @@ def resize_frame(frame, size, method=Image.BILINEAR):
 
 def create_title_frame(env_name, algo, ep, total):
     """Create title frame for episode"""
-    fig = Figure(figsize=(6, 4), dpi=100)
+    fig = Figure(figsize=(6, 4), dpi=100, facecolor='white')
     canvas = FigureCanvasAgg(fig)
     ax = fig.add_subplot(111)
     ax.set_xlim(0, 10)
@@ -309,7 +309,7 @@ def create_title_frame(env_name, algo, ep, total):
 
 def create_result_frame(ep, reward, steps):
     """Create result frame showing stats"""
-    fig = Figure(figsize=(6, 4), dpi=100)
+    fig = Figure(figsize=(6, 4), dpi=100, facecolor='white')
     canvas = FigureCanvasAgg(fig)
     ax = fig.add_subplot(111)
     ax.set_xlim(0, 10)
@@ -335,7 +335,7 @@ def create_result_frame(ep, reward, steps):
 
 def create_training_progress_frame(env_name, algo, ep, total, reward):
     """Create frame showing training progress"""
-    fig = Figure(figsize=(6, 4), dpi=100)
+    fig = Figure(figsize=(6, 4), dpi=100, facecolor='white')
     canvas = FigureCanvasAgg(fig)
     ax = fig.add_subplot(111)
     ax.set_xlim(0, 10)

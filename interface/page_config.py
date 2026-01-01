@@ -23,10 +23,15 @@ def setup_page():
     
     st.markdown("""
         <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&display=swap');
+        
+        html, body, p, h1, h2, h3, h4, h5, h6, label, button, input, textarea, li {
+            font-family: 'Merriweather', 'Georgia', serif !important;
+            font-weight: 700 !important;
+        }
         
         * {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
         }
         
         /* Layout */
@@ -42,7 +47,7 @@ def setup_page():
         
         /* Typography */
         h1 {
-            color: #0f172a !important;
+            color: #000000 !important;
             font-weight: 700 !important;
             font-size: 2.5rem !important;
             margin-bottom: 1rem !important;
@@ -50,7 +55,7 @@ def setup_page():
         }
         
         h2 {
-            color: #1e293b !important;
+            color: #000000 !important;
             font-weight: 600 !important;
             font-size: 1.875rem !important;
             margin-top: 2rem !important;
@@ -58,42 +63,42 @@ def setup_page():
         }
         
         h3 {
-            color: #334155 !important;
+            color: #000000 !important;
             font-weight: 600 !important;
             font-size: 1.5rem !important;
             margin-top: 1.5rem !important;
         }
         
         h4 {
-            color: #475569 !important;
+            color: #000000 !important;
             font-weight: 500 !important;
             font-size: 1.25rem !important;
         }
         
         p, span, div, label {
-            color: #475569 !important;
+            color: #000000 !important;
             line-height: 1.6 !important;
         }
         
         /* Sidebar */
         [data-testid="stSidebar"] {
-            background: linear-gradient(180deg, #334155 0%, #1e293b 100%);
-            border-right: 1px solid #475569;
+            background-color: #ffffff;
+            border-right: 1px solid #e2e8f0;
         }
         
         [data-testid="stSidebar"] * {
-            color: #f1f5f9 !important;
+            color: #000000 !important;
         }
         
         [data-testid="stSidebar"] h1,
         [data-testid="stSidebar"] h2,
         [data-testid="stSidebar"] h3 {
-            color: #ffffff !important;
+            color: #000000 !important;
             font-weight: 600 !important;
         }
         
         [data-testid="stSidebar"] label {
-            color: #e2e8f0 !important;
+            color: #000000 !important;
             font-weight: 500 !important;
             font-size: 0.875rem !important;
             text-transform: uppercase !important;

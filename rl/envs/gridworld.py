@@ -76,7 +76,7 @@ class GridWorldEnv(BaseEnvironment):
         if not MATPLOTLIB_AVAILABLE:
             return np.ones((300, 300, 3), dtype=np.uint8) * 200
 
-        fig, ax = plt.subplots(figsize=(6, 6))
+        fig, ax = plt.subplots(figsize=(6, 6), facecolor='white')
 
         for i in range(self.size + 1):
             ax.plot([0, self.size], [i, i], 'k-')
