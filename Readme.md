@@ -22,7 +22,7 @@ The **RL Playground** is a comprehensive educational tool designed to help stude
 ## 🎥 Demo
 
 <p align="center">
-  <img src="interface/RL Bonus Visualizer.gif" width="800" alt="RL Playground Demo"/>
+  <img src="assets/RL Bonus Visualizer.gif" width="800" alt="RL Playground Demo"/>
 </p>
 
 ###  Key Highlights
