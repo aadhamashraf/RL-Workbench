@@ -96,8 +96,9 @@ class GridWorldEnv(BaseEnvironment):
 
         if mode == 'rgb_array':
             fig.canvas.draw()
-            img = np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8)
-            img = img.reshape(fig.canvas.get_width_height()[::-1] + (3,))
+            img = np.frombuffer(fig.canvas.buffer_rgba(), dtype=np.uint8)
+            img = img.reshape(fig.canvas.get_width_height()[::-1] + (4,))
+            img = img[:, :, :3]  # Convert RGBA to RGB
             plt.close(fig)
             return img
 

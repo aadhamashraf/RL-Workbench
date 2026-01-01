@@ -156,6 +156,43 @@ def plot_policy_from_pi(pi, env):
     return plot_policy(pi, env, from_q=False)
 
 
+def plot_qvalues(Q, env):
+    """Plot Q-values as heatmap for each action"""
+    
+    n_states, n_actions = Q.shape
+    
+    if hasattr(env, 'size') and n_states <= 100:
+        size = env.size
+        
+        fig, axes = plt.subplots(1, n_actions, figsize=(4 * n_actions, 4))
+        if n_actions == 1:
+            axes = [axes]
+        
+        action_names = ['Up', 'Right', 'Down', 'Left'] if n_actions == 4 else [f'A{i}' for i in range(n_actions)]
+        
+        for action_idx in range(n_actions):
+            Q_action = Q[:, action_idx].reshape(size, size)
+            ax = axes[action_idx]
+            
+            sns.heatmap(
+                Q_action, annot=True, fmt='.2f', cmap='RdYlGn',
+                cbar_kws={'label': 'Q-Value'}, ax=ax, square=True
+            )
+            ax.set_title(f'Q-values for {action_names[action_idx]}', fontweight='bold')
+            ax.set_xlabel('X Position')
+            ax.set_ylabel('Y Position')
+        
+        plt.tight_layout()
+        return fig
+    else:
+        fig, ax = plt.subplots(figsize=(12, 6))
+        sns.heatmap(Q.T, annot=False, cmap='RdYlGn', ax=ax)
+        ax.set_xlabel('State')
+        ax.set_ylabel('Action')
+        ax.set_title('Q-values Heatmap')
+        return fig
+
+
 def plot_convergence(hist):
     fig, ax = plt.subplots(figsize=(10, 6))
 

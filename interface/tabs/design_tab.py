@@ -113,7 +113,7 @@ def render_run_card(run, idx):
         with video_col1:
             st.markdown("#### Training Progress")
             if run.get('training_video_path') and os.path.exists(run['training_video_path']):
-                st.video(run['training_video_path'])
+                st.video(run['training_video_path'], format='video/mp4')
                 with open(run['training_video_path'], 'rb') as f:
                     st.download_button(
                         "Download Training Video",
@@ -128,7 +128,7 @@ def render_run_card(run, idx):
         with video_col2:
             st.markdown("#### Final Policy")
             if run.get('inference_video_path') and os.path.exists(run['inference_video_path']):
-                st.video(run['inference_video_path'])
+                st.video(run['inference_video_path'], format='video/mp4')
                 with open(run['inference_video_path'], 'rb') as f:
                     st.download_button(
                         "Download Inference Video",
@@ -508,13 +508,13 @@ def render_comparison_view():
             with col1:
                 st.markdown("**Training Progress**")
                 if r.get('training_video_path') and os.path.exists(r['training_video_path']):
-                    st.video(r['training_video_path'])
+                    st.video(r['training_video_path'], format='video/mp4')
                 else:
                     st.info("Video not available")
             
             with col2:
                 st.markdown("**Final Policy**")
                 if r.get('inference_video_path') and os.path.exists(r['inference_video_path']):
-                    st.video(r['inference_video_path'])
+                    st.video(r['inference_video_path'], format='video/mp4')
                 else:
                     st.info("Video not available")

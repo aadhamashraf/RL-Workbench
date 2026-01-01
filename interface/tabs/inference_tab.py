@@ -13,7 +13,7 @@ def render_video_column(title, caption, video_path, dl_label, speed):
         video_path = video_path[0]
     
     if video_path and os.path.exists(video_path):
-        st.video(video_path)
+        st.video(video_path, format='video/mp4', start_time=0)
         st.info(f"Tip: Use browser controls or set playback to {speed}x")
         
         with open(video_path, 'rb') as f:

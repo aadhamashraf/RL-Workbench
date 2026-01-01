@@ -9,11 +9,16 @@ from rl.envs.base import BaseEnvironment
 class GymnasiumEnvWrapper(BaseEnvironment):
   """Wrapper for Gymnasium environments"""
   
-  def __init__(self, env_id, name):
+  def __init__(self, env_id, name, is_slippery=None):
     super().__init__()
     self.env_id = env_id
     self.env_name = name
-    self.env = gym.make(env_id, render_mode='rgb_array')
+    
+    # Handle FrozenLake slippery parameter
+    if is_slippery is not None and 'FrozenLake' in env_id:
+      self.env = gym.make(env_id, render_mode='rgb_array', is_slippery=is_slippery)
+    else:
+      self.env = gym.make(env_id, render_mode='rgb_array')
     
     self.is_discrete_state = isinstance(self.env.observation_space, gym.spaces.Discrete)
     self.is_tuple_state = isinstance(self.env.observation_space, gym.spaces.Tuple)

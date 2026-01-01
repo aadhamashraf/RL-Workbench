@@ -6,8 +6,20 @@ def setup_page():
     st.set_page_config(
         page_title="RL Playground",
         layout="wide",
-        initial_sidebar_state="expanded"
+        initial_sidebar_state="expanded",
+        menu_items={
+            'Get Help': None,
+            'Report a bug': None,
+            'About': "# RL Playground\nReinforcement Learning Visualizer"
+        }
     )
+    
+    # Force light theme
+    st.markdown("""
+        <script>
+        window.parent.document.body.style.backgroundColor = '#ffffff';
+        </script>
+    """, unsafe_allow_html=True)
     
     st.markdown("""
         <style>

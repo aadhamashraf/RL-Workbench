@@ -1,30 +1,128 @@
 import streamlit as st
-from rl.settings import ENVIRONMENTS
-from rl.settings import ALGORITHMS
+from rl.settings import ENVIRONMENTS, ALGORITHMS
+
+# Environment grouping configuration
+ENVIRONMENT_GROUPS = {
+    'GridWorld': {
+        'base': 'GridWorld',
+        'variations': {
+            'Default (10x10)': 'GridWorld',
+            'Small (5x5)': 'GridWorld-Small',
+            'Medium (10x10)': 'GridWorld-Medium',
+            'Large (15x15)': 'GridWorld-Large',
+            'Sparse Obstacles': 'GridWorld-Sparse',
+            'Dense Obstacles': 'GridWorld-Dense'
+        }
+    },
+    'Maze': {
+        'base': 'Maze',
+        'variations': {
+            'Default (10x10)': 'Maze',
+            'Tiny (5x5)': 'Maze-Tiny',
+            'Small (7x7)': 'Maze-Small',
+            'Medium (10x10)': 'Maze-Medium',
+            'Large (15x15)': 'Maze-Large',
+            'Huge (20x20)': 'Maze-Huge'
+        }
+    },
+    'FrozenLake': {
+        'base': 'FrozenLake',
+        'variations': {
+            '4x4 (Non-slippery)': 'FrozenLake',
+            '8x8 (Non-slippery)': 'FrozenLake-8x8',
+            '4x4 (Slippery)': 'FrozenLake-Slippery',
+            '8x8 (Slippery)': 'FrozenLake-8x8-Slippery'
+        }
+    },
+    'CartPole': {
+        'base': 'CartPole',
+        'variations': {
+            'Standard (v0)': 'CartPole',
+            'Long Episodes (v1)': 'CartPole-Long'
+        }
+    }
+}
+
+# Standalone environments (no variations)
+STANDALONE_ENVS = [
+    'Taxi', 'CliffWalking', 'Blackjack', 'MountainCar', 'Acrobot',
+    'TwoRooms', 'TicTacToe'
+]
 
 def render_sidebar():
-  """Render sidebar with environment and algorithm selection"""
+  """Render sidebar with grouped environment and algorithm selection"""
   
   with st.sidebar:
     st.markdown("<h2 style='text-align: center; color: white; margin-bottom: 2rem;'>Configuration</h2>", 
                 unsafe_allow_html=True)
     
     st.markdown("### Environment")
-    env_names = list(ENVIRONMENTS.keys())
-    env = st.selectbox(
-      "Choose an environment",
-      env_names,
-      index=env_names.index(st.session_state.selected_environment),
-      label_visibility="collapsed"
+    
+    # Get all environment types (groups + standalone)
+    env_types = list(ENVIRONMENT_GROUPS.keys()) + STANDALONE_ENVS
+    
+    # Determine current environment type
+    current_env = st.session_state.selected_environment
+    current_type = None
+    
+    # Check if current env is in a group
+    for group_name, group_data in ENVIRONMENT_GROUPS.items():
+        if current_env in group_data['variations'].values():
+            current_type = group_name
+            break
+    
+    # If not in a group, it's standalone
+    if current_type is None and current_env in STANDALONE_ENVS:
+        current_type = current_env
+    
+    # Default to first option if not found
+    if current_type is None:
+        current_type = env_types[0]
+    
+    # Environment type selector
+    env_type = st.selectbox(
+      "Environment Type",
+      env_types,
+      index=env_types.index(current_type) if current_type in env_types else 0,
+      key="env_type_selector"
     )
     
-    if env != st.session_state.selected_environment:
-      st.session_state.selected_environment = env
+    # Variation selector (if applicable)
+    if env_type in ENVIRONMENT_GROUPS:
+        group = ENVIRONMENT_GROUPS[env_type]
+        variations = list(group['variations'].keys())
+        
+        # Find current variation
+        current_variation = None
+        for var_name, var_env in group['variations'].items():
+            if var_env == current_env:
+                current_variation = var_name
+                break
+        
+        if current_variation is None:
+            current_variation = variations[0]
+        
+        variation = st.selectbox(
+            "Variation",
+            variations,
+            index=variations.index(current_variation) if current_variation in variations else 0,
+            key="env_variation_selector"
+        )
+        
+        selected_env = group['variations'][variation]
+    else:
+        # Standalone environment
+        selected_env = env_type
+    
+    # Update session state if environment changed
+    if selected_env != st.session_state.selected_environment:
+      st.session_state.selected_environment = selected_env
       st.session_state.training_complete = False
       st.session_state.trained_agent = None
       st.rerun()
     
-    env_info = ENVIRONMENTS[env]
+    # Environment info
+    env_info = ENVIRONMENTS[selected_env]
     with st.expander("ℹ Environment Info", expanded=False):
       st.markdown(f"**Description:** {env_info['description']}")
       st.markdown(f"**Type:** {env_info['type']}")
